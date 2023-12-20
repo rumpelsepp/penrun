@@ -4,13 +4,18 @@
 
 on: [push, pull_request]
 
+name: "Tests"
+permissions: {}
+
 jobs:
    bats:
      runs-on: ubuntu-latest
+     container: debian:latest
      steps:
        - uses: actions/checkout@v3
        - name: install bats
-         uses: brokenpip3/setup-bats-libs@1.5.2
+         run: |
+          apt-get update && apt-get install -y bats jq zstd git util-linux
        - name: run bats
          run: |
            bats -x -r tests

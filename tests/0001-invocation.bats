@@ -11,35 +11,24 @@ setup() {
 }
 
 @test "invoke penrun without parameters" {
-    local tmpdir
-    tmpdir="$(mktemp -d)"
-    (
-        cd "$tmpdir"
-        penrun -c /dev/null ls -lah
-        if [[ ! -d "ls" ]]; then
-            echo "output directory is missing"
-            return 1
-        fi
+    cd "$BATS_TEST_TMPDIR"
 
-        mapfile -t meta < "ls/LATEST/META.json"
-        for line in "${meta[@]}"; do
-            local cmd
-            local exit_code
-            if [[ "$line" =~ EXIT:(.+) ]]; then
-                exit_code="${BASH_REMATCH[1]}"
-                if ((exit_code != 0)); then
-                    return 1
-                fi
-            fi
-            if [[ "$line" =~ COMMAND:(.+)\s$ ]]; then
-                cmd="${BASH_REMATCH[1]}"
-                if [[ "$cmd" != "ls -lah" ]]; then
-                    echo "$cmd"
-                    return 1
-                fi
-            fi
-        done
+    mkdir foo
 
-        rm -rf "$tmpdir"
-    )
+    penrun -c /dev/null ls -lah
+
+    if [[ ! -d "ls" ]]; then
+        echo "output directory is missing"
+        return 1
+    fi
+
+    if (( "$(jq ".exit_code" < ls/LATEST/META.json)" != "0" )); then
+        echo "exit_code in META != 0"
+        return 1
+    fi
+
+    if [[ "$(jq -r '.command | join(" ")' < ls/LATEST/META.json)" != "ls -lah" ]]; then
+        echo "command != ls -lah"
+        return 1
+    fi
 }
