@@ -276,6 +276,7 @@ usage() {
 	echo " -C CMD   Compression command for OUTPUT"
 	echo " -S SEC   Sleep this time beetween jobs"
 	echo " -T TPL   A command template for batch processing"
+	echo " -b       Use batched mode for parallel processing. Commands are read from stdin."
 	echo " -c FILE  Use this config file exclusively"
 	echo " -d DIR   Use artifactsdir DIR"
 	echo " -e EXT   File extension for OUTPUT"
@@ -295,6 +296,7 @@ dienocmd() {
 
 main() {
 	local artifactsdir=""
+	local batch_mode=""
 	local forced_config=""
 	local jobs="1"
 	local run_until="0"
@@ -304,11 +306,12 @@ main() {
 	local template=""
 	local use_default_args="1"
 
-	while getopts "C:S:T:c:d:e:j:np:st:uh" arg; do
+	while getopts "C:S:T:bc:d:e:j:np:st:uh" arg; do
 		case "$arg" in
 		C) read -r -a PENRUN_COMPRESSION_COMMAND <<<"$OPTARG" ;;
 		S) sleep_time="$OPTARG" ;;
 		T) template="$OPTARG" ;;
+		b) batch_mode=1 ;;
 		c) forced_config="$OPTARG" ;;
 		d) artifactsdir="$OPTARG" ;;
 		e) PENRUN_OUTPUT_EXTENSION="$OPTARG" ;;
@@ -332,12 +335,12 @@ main() {
 	fi
 
 	local cmds
-	if [[ ! -t 0 ]]; then
+	if ((batch_mode)); then
 		mapfile -t cmds </dev/stdin
 
 		# Allow the config or spawned programs to detect
 		# wheather they are run in batched mode.
-		export PENRUN_BATCHED=1
+		export PENRUN_BATCH_MODE=1
 	else
 		if (($# < 1)); then
 			dienocmd
@@ -368,7 +371,7 @@ main() {
 		local cmd_arr
 		local fragment
 
-		if [[ -n "${PENRUN_BATCHED-}" ]]; then
+		if [[ -n "${PENRUN_BATCH_MODE-}" ]]; then
 			fragment="$cmd"
 			# shellcheck disable=SC2059
 			if [[ -n "$template" ]]; then
@@ -409,7 +412,7 @@ main() {
 			cur_jobs="$((cur_jobs - 1))"
 			log "Job terminated. Currently active jobs: $cur_jobs."
 		else
-			if [[ -n "${PENRUN_BATCHED-}" ]]; then
+			if [[ -n "${PENRUN_BATCH_MODE-}" ]]; then
 				log "Starting command '$cmd'."
 			fi
 
@@ -424,7 +427,7 @@ main() {
 
 		ret="$?"
 
-		if [[ -n "${PENRUN_BATCHED-}" ]]; then
+		if [[ -n "${PENRUN_BATCH_MODE-}" ]]; then
 			if ((run_until)) && ((ret != 0)); then
 				return "$((-EXIT_CODE_FAILED_FIRST))"
 			elif ((ret != 0)); then

@@ -14,6 +14,7 @@
       devShell.x86_64-linux = pkgs.mkShell {
         buildInputs = with pkgs; [ 
           bats
+          nodePackages_latest.bash-language-server
         ];
         shellHook = ''
           LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [stdenv.cc.cc]}

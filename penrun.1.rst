@@ -232,8 +232,8 @@ PENRUN_ARTIFACTS
     This variable is set by penrun to the current artifactsdir.
     Spawned programs can use this variable to locate the current artifactsdir to store further artifacts on their own.
 
-PENRUN_BATCHED
-    This variable is set, when penrun processes commands in batched mode.
+PENRUN_BATCH_MODE
+    This variable is set, when penrun processes commands in batch mode.
 
 PENRUN_COMMAND
     This variable includes the full command provided to penrun; excluding DEFAULT_ARGS.
