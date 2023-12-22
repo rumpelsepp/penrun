@@ -84,10 +84,10 @@ lock_or_wait() {
 		exec 87<"${PENRUN_LOCK}"
 
 		if ! flock -n 87; then
-			echo "Could not aquire lock ${PENRUN_LOCK}"
-			echo "Waiting ..."
+			log "Could not aquire lock ${PENRUN_LOCK}"
+			log "Waiting for lock…"
 			flock 87 || die "Lock cannot be aquired"
-			echo "... aquired lock"
+			log "… aquired lock."
 		fi
 	fi
 }
@@ -221,7 +221,7 @@ prepare_and_run_cmd() {
 	if ((!skip_hooks)) && isfunction "post_run"; then
 		if ! PENRUN_COMMAND="$cmd_escaped" PENRUN_ARTIFACTS="$artifactsdir" \
 			run_hook "$artifactsdir" "post_run"; then
-			die "error: post_run hook failed"
+			die "post_run hook failed"
 		fi
 	fi
 
