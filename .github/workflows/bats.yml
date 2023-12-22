@@ -10,12 +10,12 @@ permissions: {}
 jobs:
    bats:
      runs-on: ubuntu-latest
-     container: debian:latest
+     container: debian:stable
      steps:
        - uses: actions/checkout@v3
        - name: install bats
          run: |
-          apt-get update && apt-get install -y bats jq zstd git util-linux
+           apt-get update && apt-get install -y bats jq zstd git util-linux
        - name: run bats
          run: |
            bats -x -r tests
