@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: Stefan Tatschner
+#
+# SPDX-License-Identifier: CC0-1.0
+
 .PHONY: lint
 lint:
 	find . -iname "*.sh" -or -iname "*.bats" -exec shellcheck '{}' \;
