@@ -170,6 +170,7 @@ prepare_and_run_cmd() {
 	local artifactsdir="$3"
 	local tag="$4"
 	local fragment="$5"
+	local artifacts_base_default="$PWD/penrun-artifacts"
 	shift 5
 
 	local scriptname
@@ -185,7 +186,7 @@ prepare_and_run_cmd() {
 		scriptname="$scriptname-$tag"
 	fi
 	if [[ -z "${artifactsdir-}" ]]; then
-		artifactsdir="${PENRUN_ARTIFACTS_BASE:-$PWD}/${scriptname}/run-$(date +%Y%m%d-%H%M%S.%N)"
+		artifactsdir="${PENRUN_ARTIFACTS_BASE:-$artifacts_base_default}/${scriptname}/run-$(date +%Y%m%d-%H%M%S.%N)"
 	fi
 	if isfunction "cmd_to_artifactsdir"; then
 		if ! artifactsdir="$(cmd_to_artifactsdir "$artifactsdir" "$fragment" "$tag" "$cmd_escaped")"; then

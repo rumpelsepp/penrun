@@ -33,7 +33,7 @@
 # PENRUN_DEFAULT_ARGS=()
 
 # Lock on a specifc file.
-# Useful to make sure, that only one instance of penrun 
+# Useful to make sure, that only one instance of penrun
 # can access a particular resource.
 # PENRUN_LOCK="/path/to/lock"
 

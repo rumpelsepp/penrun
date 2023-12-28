@@ -11,5 +11,5 @@ load setup.sh
 
 	penrun ls -lah
 
-	[[ -d "ls" ]]
+	[[ -d "penrun-artifacts" ]]
 }

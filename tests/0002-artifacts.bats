@@ -10,11 +10,11 @@ load setup.sh
 	penrun true
 
 	local command
-	command="$(trim_string "$(grep PENRUN_COMMAND <true/LATEST/ENV)")"
+	command="$(trim_string "$(grep PENRUN_COMMAND <penrun-artifacts/true/LATEST/ENV)")"
 	[[ "$command" == "PENRUN_COMMAND=true" ]]
 
 	local artifacts
-	artifacts="$(trim_string "$(grep PENRUN_ARTIFACTS <true/LATEST/ENV)")"
+	artifacts="$(trim_string "$(grep PENRUN_ARTIFACTS <penrun-artifacts/true/LATEST/ENV)")"
 	[[ "$(basename "$(dirname "${artifacts#*=}")")" == "true" ]]
 }
 
@@ -22,7 +22,7 @@ load setup.sh
 	penrun ls -lah
 
 	local meta
-	meta="$(<ls/LATEST/META.json)"
+	meta="$(<penrun-artifacts/ls/LATEST/META.json)"
 
 	(("$(jq ".exit_code" <<<"$meta")" == "0"))
 	[[ "$(jq -r '.command | join(" ")' <<<"$meta")" == "ls -lah" ]]
@@ -33,5 +33,5 @@ load setup.sh
 @test "check OUTPUT.zstd file" {
 	penrun echo "hans"
 
-	[[ "$(trim_string "$(zstdcat echo/LATEST/OUTPUT.zst)")" == "hans" ]]
+	[[ "$(trim_string "$(zstdcat penrun-artifacts/echo/LATEST/OUTPUT.zst)")" == "hans" ]]
 }
