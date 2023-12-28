@@ -4,12 +4,13 @@
 
 .PHONY: lint
 lint:
-	find . -iname "*.sh" -or -iname "*.bats" -exec shellcheck '{}' \;
+	find . \( -iname "penrun" -or -iname "*.sh" -or -iname "*.bats" \) | xargs shellcheck
+	find . \( -iname "penrun" -or -iname "*.sh" -or -iname "*.bats" \) | xargs shfmt -d
 
 .PHONY: fmt
 fmt:
-	find . -iname "*.sh" -or -iname "*.bats" -exec shfmt -w '{}' \;
-	
+	find . \( -iname "penrun" -or -iname "*.sh" -or -iname "*.bats" \) | xargs shfmt -w
+
 .PHONY: test
 test:
 	bats -x -r tests

@@ -4,19 +4,19 @@
 
 on: [push, pull_request]
 
-name: "Linters"
+name: "Tests"
 permissions: {}
 
 jobs:
-  linters:
+  tests:
     runs-on: ubuntu-latest
     container: debian:stable
 
     steps:
       - uses: actions/checkout@v3
-      - name: install linters
+      - name: install bats
         run: |
-           apt-get update && apt-get install -y git util-linux shellcheck shfmt reuse make
-      - name: run linters
+           apt-get update && apt-get install -y bats jq zstd git util-linux make
+      - name: run bats
         run: |
-           make lint
+           make test

@@ -270,7 +270,7 @@ run_cmd() {
 }
 
 usage() {
-	echo "penrun [-nsuh] [-C CMD] [-S SEC] [-T TPL] [-c FILE]"
+	echo "penrun [-bnsuh] [-C CMD] [-S SEC] [-T TPL] [-c FILE]"
 	echo "       [-d DIR] [-e EXT] [-j JOBS] [-p CMD] [-t TAG] COMMAND"
 	echo ""
 	echo "options:"
