@@ -10,13 +10,20 @@ permissions: {}
 jobs:
   tests:
     runs-on: ubuntu-latest
-    container: debian:stable
+    container: debian:bookworm
 
     steps:
       - uses: actions/checkout@v3
-      - name: install bats
+      - name: install tools
         run: |
-           apt-get update && apt-get install -y bats jq zstd git util-linux make
+          echo "deb http://deb.debian.org/debian bookworm-backports main" > /etc/apt/sources.list.d/backports.list
+          apt-get update
+          apt-get install -y bats jq zstd git util-linux make
+          apt-get install -y -t bookworm-backports golang-go
+          go env -w GOTOOLCHAIN=go1.21.5+auto
+      - name: build
+        run: |
+          make penrun
       - name: run bats
         run: |
-           make test
+          make test

@@ -2,14 +2,20 @@
 #
 # SPDX-License-Identifier: CC0-1.0
 
+GO ?= go
+
+.PHONY: penrun
+penrun:
+	$(GO) build $(GOFLAGS) -o $@ .
+
 .PHONY: lint
 lint:
-	find . \( -iname "penrun" -or -iname "*.sh" -or -iname "*.bats" \) | xargs shellcheck
-	find . \( -iname "penrun" -or -iname "*.sh" -or -iname "*.bats" \) | xargs shfmt -d
+	find . \( -iname "*.sh" -or -iname "*.bats" \) | xargs shellcheck
+	find . \( -iname "*.sh" -or -iname "*.bats" \) | xargs shfmt -d
 
 .PHONY: fmt
 fmt:
-	find . \( -iname "penrun" -or -iname "*.sh" -or -iname "*.bats" \) | xargs shfmt -w
+	find . \( -iname "*.sh" -or -iname "*.bats" \) | xargs shfmt -w
 
 .PHONY: test
 test:
