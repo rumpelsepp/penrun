@@ -1,6 +1,6 @@
-# SPDX-FileCopyrightText: AISEC Pentesting Team
+# SPDX-FileCopyrightText: Stefan Tatschner
 #
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
 
 setup() {
 	# https://bats-core.readthedocs.io/en/stable/tutorial.html#let-s-do-some-setup
@@ -10,6 +10,3 @@ setup() {
 	cd "$BATS_TEST_TMPDIR" || exit 1
 }
 
-trim_string() {
-	sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' <<<"$1"
-}

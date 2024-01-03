@@ -1,33 +1,33 @@
 #!/usr/bin/env bats
 
-# SPDX-FileCopyrightText: AISEC Pentesting Team
+# SPDX-FileCopyrightText: Stefan Tatschner
 #
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
 
-load setup.sh
+load setup.bash
+load lib.bash
 
-@test "check penrun environment variables" {
-	penrun true
-
-	local command
-	command="$(trim_string "$(grep PENRUN_COMMAND <penrun-artifacts/true/LATEST/ENV)")"
-	[[ "$command" == "PENRUN_COMMAND=true" ]]
-
-	local artifacts
-	artifacts="$(trim_string "$(grep PENRUN_ARTIFACTS <penrun-artifacts/true/LATEST/ENV)")"
-	[[ "$(basename "$(dirname "${artifacts#*=}")")" == "true" ]]
-}
-
-@test "check META.json file" {
+@test "check META.json" {
 	penrun ls -lah
 
 	local meta
-	meta="$(<penrun-artifacts/ls/LATEST/META.json)"
+	meta="$(zstdcat penrun-artifacts/ls/LATEST/META.json.zst)"
 
 	(("$(jq ".exit_code" <<<"$meta")" == "0"))
-	[[ "$(jq -r '.command | join(" ")' <<<"$meta")" == "ls -lah" ]]
+	[[ "$(jq -r '.cli | join(" ")' <<<"$meta")" == "ls -lah" ]]
+	[[ "$(jq -r '.cli_string' <<<"$meta")" == "ls -lah" ]]
 	[[ "$(jq -r '.start_time' <<<"$meta")" != "" ]]
 	[[ "$(jq -r '.end_time' <<<"$meta")" != "" ]]
+}
+
+@test "check environment variables in META.json" {
+	penrun ls -lah
+
+	local meta
+	meta="$(zstdcat penrun-artifacts/ls/LATEST/META.json.zst)"
+
+	jq -r '.environ' <<<"$meta" | grep "PENRUN_CLI_STRING=ls -lah"
+	jq -r '.environ' <<<"$meta" | grep -E "PENRUN_ARTIFACTS_DIR=.*/ls/run-.*"
 }
 
 @test "check OUTPUT.zstd file" {
