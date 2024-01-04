@@ -13,7 +13,7 @@ jobs:
     container: debian:bookworm
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: install tools
         run: |
           echo "deb http://deb.debian.org/debian bookworm-backports main" > /etc/apt/sources.list.d/backports.list

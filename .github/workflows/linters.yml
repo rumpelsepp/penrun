@@ -13,7 +13,7 @@ jobs:
     container: debian:stable
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: install linters
         run: |
            apt-get update && apt-get install -y git util-linux shellcheck shfmt reuse make
