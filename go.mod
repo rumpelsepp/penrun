@@ -6,7 +6,7 @@ module github.com/rumpelsepp/penrun
 
 go 1.21.5
 
-require github.com/pelletier/go-toml/v2 v2.1.1
+require github.com/pelletier/go-toml/v2 v2.2.1
 
 require (
 	github.com/alecthomas/kong v0.8.1
